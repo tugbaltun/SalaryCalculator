@@ -25,9 +25,9 @@ public class EmployeeManagerImpl implements EmployeeManager {
 
     @Override
     public BigDecimal raiseSalary(Date hireYear, BigDecimal salary) {
-        int worked = 2021-(int)hireYear.getTime();
+        int worked = 2021-(int)hireYear.getYear();
         BigDecimal raise;
-        BigDecimal percent = new BigDecimal("0");
+        BigDecimal percent;
         if(worked<10){
             percent = BigDecimal.valueOf(0.05);
         }else if(worked<20){
@@ -41,8 +41,18 @@ public class EmployeeManagerImpl implements EmployeeManager {
 
     @Override
     public void toString(Employee employee) {
-        System.out.println("Tax:"+tax(employee.getSalary()));
-        System.out.println("Bonus:"+bonus(employee.getWorkHours()));
-        System.out.println("Raise:"+raiseSalary(employee.getHireYear(), employee.getSalary()));
+        BigDecimal salaryWithTaxAndBonus = employee.getSalary().add(bonus(employee.getWorkHours()));
+        salaryWithTaxAndBonus = salaryWithTaxAndBonus.subtract(tax(employee.getSalary()));
+
+        BigDecimal sumSalary = salaryWithTaxAndBonus.add(raiseSalary(employee.getHireYear(), employee.getSalary()));
+        System.out.println("Adı : "+employee.getName());
+        System.out.println("Maaşı : "+employee.getSalary());
+        System.out.println("Çalışma Saati : "+employee.getWorkHours());
+        System.out.println("Başlangıç Yılı : "+employee.getHireYear().getYear());
+        System.out.println("Vergi : "+tax(employee.getSalary()));
+        System.out.println("Bonus : "+bonus(employee.getWorkHours()));
+        System.out.println("Maaş Artışı : "+raiseSalary(employee.getHireYear(), employee.getSalary()));
+        System.out.println("Vergi ve Bonuslar ile birlikte maaş : "+ salaryWithTaxAndBonus);
+        System.out.println("Toplam Maaş : "+sumSalary);
     }
 }
